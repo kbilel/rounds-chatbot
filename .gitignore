@@ -1,0 +1,25 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Database
+*.db
+*.sqlite3
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  # Main application
+  rounds-analytics-bot:
+    build: .
+    container_name: rounds-analytics-bot
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://rounds_user:rounds_password@postgres:5432/rounds_analytics
+      - REDIS_URL=redis://redis:6379/0
+      - DEBUG=false
+      - LOG_LEVEL=INFO
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - rounds-network
+
+  # PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    container_name: rounds-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: rounds_analytics
+      POSTGRES_USER: rounds_user
+      POSTGRES_PASSWORD: rounds_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5434:5432"  # Using available port 5434
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rounds_user -d rounds_analytics"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rounds-network
+
+  # Redis for caching
+  redis:
+    image: redis:7-alpine
+    container_name: rounds-redis
+    restart: unless-stopped
+    ports:
+      - "6381:6379"  # Using available port 6381
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rounds-network
+
+  # Optional: Database administration tool
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: rounds-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@rounds.com
+      PGADMIN_DEFAULT_PASSWORD: admin_password
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - rounds-network
+    profiles:
+      - dev
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  rounds-network:
+    driver: bridge 

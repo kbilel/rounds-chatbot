@@ -1,0 +1,48 @@
+# =============================================================================
+# ROUNDS ANALYTICS SLACK BOT - ENVIRONMENT CONFIGURATION
+# =============================================================================
+
+# Slack Configuration
+# NOTE: You'll get these values when you create your Slack app
+SLACK_BOT_TOKEN=xoxb-your-bot-token-here
+SLACK_SIGNING_SECRET=your-signing-secret-here
+SLACK_APP_TOKEN=xapp-your-app-token-here
+
+# OpenAI Configuration
+OPENAI_API_KEY=sk-proj-your-openai-api-key-here
+OPENAI_MODEL=gpt-4-1106-preview
+
+# Database Configuration
+# Using available port 5434 to avoid conflicts
+DATABASE_URL=postgresql://rounds_user:rounds_password@localhost:5434/rounds_analytics
+DATABASE_HOST=localhost
+DATABASE_PORT=5434
+DATABASE_NAME=rounds_analytics
+DATABASE_USER=rounds_user
+DATABASE_PASSWORD=rounds_password
+
+# LangSmith Configuration (Optional - for AI observability)
+# Set to 'true' and add your API key if you want advanced monitoring
+LANGCHAIN_TRACING_V2=false
+LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
+LANGCHAIN_API_KEY=your-langsmith-api-key-here
+LANGCHAIN_PROJECT=rounds-chatbot
+
+# Redis Configuration
+# Using available port 6381 to avoid conflicts
+REDIS_URL=redis://localhost:6381/0
+
+# Application Configuration
+DEBUG=true
+LOG_LEVEL=INFO
+MAX_QUERY_HISTORY=10
+
+# =============================================================================
+# SETUP INSTRUCTIONS:
+# =============================================================================
+# 1. Rename this file from 'env_template' to '.env'
+# 2. Follow the Slack app setup guide to get your Slack tokens
+# 3. Replace the placeholder tokens with your actual values
+# 4. Optional: Sign up for LangSmith and add your API key for advanced monitoring
+# 5. Save the file and start the application
+# ============================================================================= 
